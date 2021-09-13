@@ -1,67 +1,55 @@
 package main
 
 import (
-	"math/rand"
+	"fmt"
+	"neuralnetwork/activationfunction"
+
+	"gonum.org/v1/gonum/mat"
 )
 
-// array of random numbers
-func RandomArray(length int) []float64 {
-	var number float64
-	random := make([]float64, 0)
-	for l := 0; l < length; l++ {
-		number = rand.Float64()
-		random = append(random, number)
-	}
-	return random
-}
-
-type NeuralNetwork struct {
-	numInputs          int
-	hiddenLayers       [5]int
-	numOutputs         int
-	activationFunction string
-}
-
-// an array that represent the neurons in layers
-func (n *NeuralNetwork) layers() []int {
-	networkLayers := make([]int, 0)
-	networkLayers = append(networkLayers, n.numInputs)
-	for _, value := range n.hiddenLayers {
-		if value > 0 {
-			networkLayers = append(networkLayers, value)
-		}
-	}
-	networkLayers = append(networkLayers, n.numOutputs)
-	return networkLayers
-}
-
-// There is a weight matrix between each two layers with size of neurons on both side
-func (n *NeuralNetwork) weights() [][][]float64 {
-	networkWeights := make([][][]float64, len(n.layers())-1)
-	for i := range networkWeights {
-		networkWeights[i] = make([][]float64, n.layers()[i+1])
-		for j := range networkWeights[i] {
-			networkWeights[i][j] = append(networkWeights[i][j], RandomArray(n.layers()[i])...)
-		}
-	}
-	return networkWeights
-}
-
-// Each activation has a bias except input
-func (n *NeuralNetwork) biases() [][]float64 {
-	networkBiases := make([][]float64, len(n.layers())-1)
-	for i := range networkBiases {
-		networkBiases[i] = append(networkBiases[i], RandomArray(n.layers()[i+1])...)
-	}
-	return networkBiases
-}
-
 func main() {
-	neuraltest := NeuralNetwork{
+	a := new([]int)
+	*a = []int{4, 5}
+	inputs4Network := NeuralNetwork{
 		numInputs:          2,
 		numOutputs:         2,
-		hiddenLayers:       [...]int{4, 5, 0, 0, 0},
-		activationFunction: "test",
+		hiddenLayers:       a,
+		activationFunction: activationfunction.HyperbolicTangent,
+	}
+	row := 1000
+	column := 2
+	inputs := RadomMatrix(row, column)
+	inputs.Apply(func(r, c int, v float64) float64 { return v / 2.0 }, &inputs)
+	targets := mat.NewDense(row, column, nil)
+	for i := 0; i < row; i++ {
+		targets.Set(i, 0, inputs.At(i, 0)+inputs.At(i, 1))
+		targets.Set(i, 1, inputs.At(i, 0)-inputs.At(i, 1))
+	}
+	// training
+	neuralNetwork := InitializeNetwork(inputs4Network)
+	epoch := 1000
+	loss := make([]float64, epoch)
+	for i := 0; i < epoch; i++ {
+		loss_per_epoch := neuralNetwork.Train(inputs, *targets, 0.01, 10)
+		loss = append(loss, loss_per_epoch)
+		fmt.Println(i, loss_per_epoch)
 	}
 
+	// test
+	fmt.Println("Start testing")
+	num_test := 5
+	test_inputs := RadomMatrix(num_test, 2)
+	test_inputs.Apply(func(r, c int, v float64) float64 { return v / 2.0 }, &test_inputs)
+	test_targets := mat.NewDense(num_test, column, nil)
+	for i := 0; i < num_test-1; i++ {
+		test_targets.Set(i, 0, test_inputs.At(i, 0)+test_inputs.At(i, 1))
+		test_targets.Set(i, 1, test_inputs.At(i, 0)-test_inputs.At(i, 1))
+	}
+	test_outputs := neuralNetwork.Predict(test_inputs)
+	for i := 0; i < num_test-1; i++ {
+		fmt.Println("Test number: ", i)
+		fmt.Println("Input: ", inputs.RawRowView(i))
+		fmt.Println("Prediction: ", test_outputs.RawRowView(i))
+		fmt.Println("Targets: ", test_targets.RawRowView(i))
+	}
 }
