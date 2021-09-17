@@ -7,16 +7,16 @@ import (
 )
 
 // Calculates the new weights and biases derivatives for the network
-func (n *NeuralNetwork) BackPropagate(targets mat.Dense, activations []mat.Dense) {
+func (n *NeuralNetwork) BackPropagate(targets *mat.Dense, activations *[]mat.Dense) {
 
 	// error = dC/da
-	error := lossfunction.LossFunctionDerivatives(&targets, &activations[n.numLayers-1])
+	error := lossfunction.LossFunctionDerivatives(targets, &(*activations)[n.numLayers-1])
 	// Walking backward to calculate derivatives
 	for l := n.numLayers - 2; l >= 0; l-- {
 
 		// delta = dC/da * da/dz
 		delta := new(mat.Dense)
-		delta = &activations[l+1]
+		delta = &(*activations)[l+1]
 		aFDerivative := func(r, c int, v float64) float64 {
 			return n.ActivationFunction.Derivative(v)
 		}
@@ -35,7 +35,7 @@ func (n *NeuralNetwork) BackPropagate(targets mat.Dense, activations []mat.Dense
 			n.biasesDerivatives[l].Set(j, 0, average)
 		}
 		// dC/dw = dC/da * da/dz * dz/dw [note that dz/dw = a]
-		n.weightsDerivatives[l].Mul(activations[l].T(), delta)
+		n.weightsDerivatives[l].Mul((*activations)[l].T(), delta)
 		// update error for next step
 		// dC/da-1 = dC/da * da/dz * dz/da-1 [note that dz/da-1 = w]
 		error.Reset()

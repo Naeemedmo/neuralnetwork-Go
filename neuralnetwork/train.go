@@ -31,14 +31,14 @@ func (n *NeuralNetwork) Train(inputs, targets mat.Dense, learning_rate float64,
 		sliced_input := mat.DenseCopyOf(inputs.Slice(j, j+batch_size, 0, column))
 		sliced_targets := mat.DenseCopyOf(targets.Slice(j, j+batch_size, 0, column))
 		// Calculate values for each neuron
-		activations := n.FeedForward(*sliced_input)
+		activations := n.FeedForward(sliced_input)
 		// Calculate the derivatives of weights/biases
-		n.BackPropagate(*sliced_targets, activations)
+		n.BackPropagate(sliced_targets, activations)
 
 		// Update weights/biases
 		n.GradientDescent(learning_rate)
 		// Calculate error
-		sum_errors += lossfunction.LossFunction(sliced_targets, &activations[n.numLayers-1])
+		sum_errors += lossfunction.LossFunction(sliced_targets, &(*activations)[n.numLayers-1])
 
 	}
 	return sum_errors / float64(row)

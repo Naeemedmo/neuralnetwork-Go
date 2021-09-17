@@ -44,7 +44,7 @@ func main() {
 		test_targets.Set(i, 0, test_inputs.At(i, 0)+test_inputs.At(i, 1))
 		test_targets.Set(i, 1, test_inputs.At(i, 0)-test_inputs.At(i, 1))
 	}
-	test_outputs := neuralNetwork.Predict(test_inputs)
+	test_outputs := neuralNetwork.Predict(&test_inputs)
 	for i := 0; i < num_test-1; i++ {
 		fmt.Println("Test number:  ", i)
 		fmt.Println("Input:        ", inputs.RawRowView(i))

@@ -25,7 +25,7 @@ type NeuralNetwork struct {
 
 // Initialize a neural network by setting all properties(layers, weights, biases
 // and their derivatives)
-func New(n NetworkProperties) NeuralNetwork {
+func New(n NetworkProperties) *NeuralNetwork {
 
 	var nn NeuralNetwork
 
@@ -53,5 +53,5 @@ func New(n NetworkProperties) NeuralNetwork {
 		nn.biasesDerivatives = append(nn.biasesDerivatives, matrix)
 	}
 
-	return nn
+	return &nn
 }

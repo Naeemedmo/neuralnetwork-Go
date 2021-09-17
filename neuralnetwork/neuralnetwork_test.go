@@ -23,10 +23,10 @@ func TestNetworkPerformance(t *testing.T) {
 	}
 	// initialize the network
 	neuralNetwork := New(networkProperties)
-	activations := neuralNetwork.FeedForward(*singleInput)
-	error1 := lossfunction.LossFunction(singleTarget, &activations[neuralNetwork.numLayers-1])
+	activations := neuralNetwork.FeedForward(singleInput)
+	error1 := lossfunction.LossFunction(singleTarget, &(*activations)[neuralNetwork.numLayers-1])
 	// calculate derivatives once
-	neuralNetwork.BackPropagate(*singleTarget, activations)
+	neuralNetwork.BackPropagate(singleTarget, activations)
 
 	for i := 0; i < neuralNetwork.numLayers-2; i++ {
 		for j := 0; j < neuralNetwork.layers[i]; j++ {
@@ -36,8 +36,8 @@ func TestNetworkPerformance(t *testing.T) {
 				value += epsilon
 				neuralNetwork.weights[i].Set(i, j, value)
 				//f(x+h), dC/dw
-				output2 := neuralNetwork.Predict(*singleInput)
-				error2 := lossfunction.LossFunction(singleTarget, &output2)
+				output2 := neuralNetwork.Predict(singleInput)
+				error2 := lossfunction.LossFunction(singleTarget, output2)
 				// slope = (f(x+h) - f(x)) / h
 				numericalDerivative := (error2 - error1) / epsilon
 				difference := math.Abs(numericalDerivative - neuralNetwork.weightsDerivatives[i].At(j, k))
