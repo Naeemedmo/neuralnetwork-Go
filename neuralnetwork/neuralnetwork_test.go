@@ -1,10 +1,9 @@
-package main
+package neuralnetwork
 
 import (
 	"fmt"
 	"math"
-	"neuralnetwork/activationfunction"
-	"neuralnetwork/lossfunction"
+	"neuralnetwork-Go/lossfunction"
 	"testing"
 
 	"gonum.org/v1/gonum/mat"
@@ -16,14 +15,14 @@ func TestNetworkPerformance(t *testing.T) {
 	epsilon := 1e-10
 	singleInput := mat.NewDense(1, 2, []float64{0.3, 0.1})
 	singleTarget := mat.NewDense(1, 1, []float64{0.4})
-	networkInput := NeuralNetwork{
-		numInputs:          2,
-		numOutputs:         1,
-		hiddenLayers:       &[]int{3},
-		activationFunction: activationfunction.HyperbolicTangent,
+	networkProperties := NetworkProperties{
+		NumInputs:          2,
+		NumOutputs:         1,
+		HiddenLayers:       &[]int{3},
+		ActivationFunction: HyperbolicTangent,
 	}
 	// initialize the network
-	neuralNetwork := InitializeNetwork(networkInput)
+	neuralNetwork := New(networkProperties)
 	activations := neuralNetwork.FeedForward(*singleInput)
 	error1 := lossfunction.LossFunction(singleTarget, &activations[neuralNetwork.numLayers-1])
 	// calculate derivatives once

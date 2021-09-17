@@ -1,7 +1,7 @@
-package main
+package neuralnetwork
 
 //Updates the weights and biases with derivative of loss function
-func (n *InitializedNetwork) GradientDescent(learning_rate float64) {
+func (n *NeuralNetwork) GradientDescent(learning_rate float64) {
 
 	// loop over all the layers
 	for l := 0; l < n.numLayers-1; l++ {

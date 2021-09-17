@@ -1,4 +1,4 @@
-package activationfunction
+package neuralnetwork
 
 import (
 	"math"

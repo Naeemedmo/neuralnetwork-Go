@@ -1,4 +1,4 @@
-module neuralnetwork
+module neuralnetwork-Go
 
 go 1.17
 

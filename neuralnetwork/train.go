@@ -1,17 +1,18 @@
-package main
+package neuralnetwork
 
 import (
-	"neuralnetwork/lossfunction"
+	"neuralnetwork-Go/extras"
+	"neuralnetwork-Go/lossfunction"
 
 	"gonum.org/v1/gonum/mat"
 )
 
 // Trains the neural network
-func (n *InitializedNetwork) Train(inputs, targets mat.Dense, learning_rate float64,
+func (n *NeuralNetwork) Train(inputs, targets mat.Dense, learning_rate float64,
 	batch_size int) float64 {
 	sum_errors := 0.0
 	// first shuffle input/target
-	ShuffleMatrices(inputs, targets)
+	extras.ShuffleMatrices(inputs, targets)
 	row, column := inputs.Dims()
 
 	// Calculate number of batches

@@ -1,11 +1,11 @@
-package main
+package neuralnetwork
 
 import (
 	"gonum.org/v1/gonum/mat"
 )
 
 // Calculates the activation for each neurons in the whole network
-func (n *InitializedNetwork) FeedForward(inputs mat.Dense) []mat.Dense {
+func (n *NeuralNetwork) FeedForward(inputs mat.Dense) []mat.Dense {
 	// There is an activation for each neurons of each layer
 	activations := new([]mat.Dense)
 	*activations = append(*activations, inputs)
@@ -15,7 +15,7 @@ func (n *InitializedNetwork) FeedForward(inputs mat.Dense) []mat.Dense {
 			return v + n.biases[l].At(c, 0)
 		}
 		actFunc := func(r, c int, v float64) float64 {
-			return n.activationFunction.Evaluate(v)
+			return n.ActivationFunction.Evaluate(v)
 		}
 		act := new(mat.Dense)
 		act.Mul(&(*activations)[l], &n.weights[l])
@@ -29,7 +29,7 @@ func (n *InitializedNetwork) FeedForward(inputs mat.Dense) []mat.Dense {
 }
 
 // Predicts the output (:math:`a_{i}`) for a given input (:math:`a_{0}`)
-func (n *InitializedNetwork) Predict(inputs mat.Dense) mat.Dense {
+func (n *NeuralNetwork) Predict(inputs mat.Dense) mat.Dense {
 	activations := n.FeedForward(inputs)
 	return activations[n.numLayers-1]
 }

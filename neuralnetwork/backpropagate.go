@@ -1,13 +1,13 @@
-package main
+package neuralnetwork
 
 import (
-	"neuralnetwork/lossfunction"
+	"neuralnetwork-Go/lossfunction"
 
 	"gonum.org/v1/gonum/mat"
 )
 
 // Calculates the new weights and biases derivatives for the network
-func (n *InitializedNetwork) BackPropagate(targets mat.Dense, activations []mat.Dense) {
+func (n *NeuralNetwork) BackPropagate(targets mat.Dense, activations []mat.Dense) {
 
 	// error = dC/da
 	error := lossfunction.LossFunctionDerivatives(&targets, &activations[n.numLayers-1])
@@ -18,7 +18,7 @@ func (n *InitializedNetwork) BackPropagate(targets mat.Dense, activations []mat.
 		delta := new(mat.Dense)
 		delta = &activations[l+1]
 		aFDerivative := func(r, c int, v float64) float64 {
-			return n.activationFunction.Derivative(v)
+			return n.ActivationFunction.Derivative(v)
 		}
 		delta.Apply(aFDerivative, delta)
 		delta.MulElem(error, delta)
