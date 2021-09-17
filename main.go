@@ -17,7 +17,7 @@ func main() {
 	}
 	row := 1000
 	column := 2
-	inputs := extras.RadomMatrix(row, column)
+	inputs := extras.NewRadomMatrix(row, column)
 	inputs.Apply(func(r, c int, v float64) float64 { return v / 2.0 }, &inputs)
 	targets := mat.NewDense(row, column, nil)
 	for i := 0; i < row; i++ {
@@ -37,7 +37,7 @@ func main() {
 	// test
 	fmt.Println("Start testing")
 	numTest := 5
-	testInputs := extras.RadomMatrix(numTest, 2)
+	testInputs := extras.NewRadomMatrix(numTest, 2)
 	testInputs.Apply(func(r, c int, v float64) float64 { return v / 2.0 }, &testInputs)
 	testTargets := mat.NewDense(numTest, column, nil)
 	for i := 0; i < numTest-1; i++ {

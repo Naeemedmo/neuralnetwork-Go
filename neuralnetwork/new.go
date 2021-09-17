@@ -35,21 +35,21 @@ func New(n NetworkProperties) *NeuralNetwork {
 	nn.layers = append(nn.layers, n.NumOutputs)
 	// weights and their derivatives
 	for i := 0; i < nn.numLayers-1; i++ {
-		matrix := extras.RadomMatrix(nn.layers[i], nn.layers[i+1])
+		matrix := extras.NewRadomMatrix(nn.layers[i], nn.layers[i+1])
 		nn.weights = append(nn.weights, matrix)
 	}
 	for i := 0; i < nn.numLayers-1; i++ {
-		matrix := extras.RadomMatrix(nn.layers[i], nn.layers[i+1])
+		matrix := extras.NewRadomMatrix(nn.layers[i], nn.layers[i+1])
 		nn.weightsDerivatives = append(nn.weightsDerivatives, matrix)
 	}
 
 	// biases and their derivatives
 	for i := 0; i < nn.numLayers-1; i++ {
-		matrix := extras.RadomMatrix(nn.layers[i+1], 1)
+		matrix := extras.NewRadomMatrix(nn.layers[i+1], 1)
 		nn.biases = append(nn.biases, matrix)
 	}
 	for i := 0; i < nn.numLayers-1; i++ {
-		matrix := extras.RadomMatrix(nn.layers[i+1], 1)
+		matrix := extras.NewRadomMatrix(nn.layers[i+1], 1)
 		nn.biasesDerivatives = append(nn.biasesDerivatives, matrix)
 	}
 

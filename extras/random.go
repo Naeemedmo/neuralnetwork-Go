@@ -7,7 +7,7 @@ import (
 )
 
 // returns a 2d matrix with random values
-func RadomMatrix(row, column int) mat.Dense {
+func NewRadomMatrix(row, column int) mat.Dense {
 	data := make([]float64, row*column)
 	for i := range data {
 		data[i] = rand.Float64()
