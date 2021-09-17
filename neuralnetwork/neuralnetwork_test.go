@@ -48,6 +48,7 @@ func TestNetworkPerformance(t *testing.T) {
 					fmt.Printf("The numerical derivative is:    %5f\n", numericalDerivative)
 					fmt.Printf("Networks derivative is:         %5f\n", neuralNetwork.weightsDerivatives[i].At(j, k))
 				}
+				neuralNetwork.weights[i].Set(j, k, neuralNetwork.weights[i].At(j, k)-epsilon)
 
 			}
 		}
