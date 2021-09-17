@@ -28,13 +28,11 @@ func TestNetworkPerformance(t *testing.T) {
 	// calculate derivatives once
 	neuralNetwork.BackPropagate(singleTarget, activations)
 
-	for i := 0; i < neuralNetwork.numLayers-2; i++ {
+	for i := 0; i < neuralNetwork.numLayers-1; i++ {
 		for j := 0; j < neuralNetwork.layers[i]; j++ {
 			for k := 0; k < neuralNetwork.layers[i+1]; k++ {
 				// change the weight by epsilon (x + h)
-				value := neuralNetwork.weights[i].At(i, j)
-				value += epsilon
-				neuralNetwork.weights[i].Set(i, j, value)
+				neuralNetwork.weights[i].Set(j, k, neuralNetwork.weights[i].At(j, k)+epsilon)
 				//f(x+h), dC/dw
 				output2 := neuralNetwork.Predict(singleInput)
 				error2 := lossfunction.LossFunction(singleTarget, output2)

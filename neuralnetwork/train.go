@@ -8,38 +8,38 @@ import (
 )
 
 // Trains the neural network
-func (n *NeuralNetwork) Train(inputs, targets mat.Dense, learning_rate float64,
-	batch_size int) float64 {
-	sum_errors := 0.0
+func (n *NeuralNetwork) Train(inputs, targets mat.Dense, learningRate float64,
+	batchSize int) float64 {
+	sumErrors := 0.0
 	// first shuffle input/target
 	extras.ShuffleMatrices(inputs, targets)
 	row, column := inputs.Dims()
 
 	// Calculate number of batches
-	n_batch := row / batch_size
-	last_batch := batch_size
-	if n_batch*batch_size != row { // last batch has less elements
-		last_batch = row - n_batch*batch_size
+	nBatch := row / batchSize
+	LastBatch := batchSize
+	if nBatch*batchSize != row { // last batch has less elements
+		LastBatch = row - nBatch*batchSize
 	}
-	for b := 0; b < n_batch; b++ {
+	for b := 0; b < nBatch; b++ {
 
-		j := b * batch_size
-		if b == n_batch-1 {
-			batch_size = last_batch
+		j := b * batchSize
+		if b == nBatch-1 {
+			batchSize = LastBatch
 		}
 
-		sliced_input := mat.DenseCopyOf(inputs.Slice(j, j+batch_size, 0, column))
-		sliced_targets := mat.DenseCopyOf(targets.Slice(j, j+batch_size, 0, column))
+		slicedInputs := mat.DenseCopyOf(inputs.Slice(j, j+batchSize, 0, column))
+		slicedTarget := mat.DenseCopyOf(targets.Slice(j, j+batchSize, 0, column))
 		// Calculate values for each neuron
-		activations := n.FeedForward(sliced_input)
+		activations := n.FeedForward(slicedInputs)
 		// Calculate the derivatives of weights/biases
-		n.BackPropagate(sliced_targets, activations)
+		n.BackPropagate(slicedTarget, activations)
 
 		// Update weights/biases
-		n.GradientDescent(learning_rate)
+		n.GradientDescent(learningRate)
 		// Calculate error
-		sum_errors += lossfunction.LossFunction(sliced_targets, &(*activations)[n.numLayers-1])
+		sumErrors += lossfunction.LossFunction(slicedTarget, &(*activations)[n.numLayers-1])
 
 	}
-	return sum_errors / float64(row)
+	return sumErrors / float64(row)
 }
